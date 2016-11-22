@@ -19,7 +19,7 @@ var app = express();
 //Use middleware
 app.use(bodyParser());
 
-//custom middleware. If app started in debug parameter pizza it will print to console
+//custom middleware. If app started in debug with parameter pizza it will print to console
 app.use(pizzaDebug);
 
 function pizzaDebug(req, res, next) {
@@ -52,17 +52,12 @@ app.use(function (req, res, next) {
     res.send('hmmm 404');
 });
 
-app.use(function(req, res, next) {
-    var err = new Error('Not Found');
-    err.status = 404;
-    next(err);
-});
-
+//catch all 500 error
 app.use(function(err, req, res, next) {
-    console.log('Something go wrong on server!', err);
+    console.log('Something went wrong on server!', err);
 
-    if(err.status === 500) {
-        res.send('Error 500 happened on server')
+    if(res.statusCode === 500) {
+        res.send('Error 500 happened on server: ' + err.message);
     }
 });
 
